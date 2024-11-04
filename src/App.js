@@ -28,12 +28,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  // const [json, setJson] = useState()
 
-  const [production, setProduction] = useState(0);
-  const [consumption, setConsumption] = useState(0);
-  const [withdrawal, setWithdrawal] = useState(0);
-  const [injection, setInjection] = useState(0);
+  const [energyData, setEnergyData] = useState({
+    production: 0,
+    consumption: 0,
+    withdrawal: 0,
+    injection: 0
+  })
 
   useEffect(() => {
     if(!isLoading) {
@@ -47,10 +48,12 @@ function App() {
             setError(true)
             setErrorMessage('Data not available for selected timespan. Try with a different one')
           } else {
-            setProduction(getValueFromField(json, 'prod'))
-            setConsumption(getValueFromField(json, 'cons'))
-            setWithdrawal(getValueFromField(json, 'fromGrid'))
-            setInjection(getValueFromField(json, 'toGrid'))
+            setEnergyData({
+              production: getValueFromField(json, 'prod'),
+              consumption: getValueFromField(json, 'cons'),
+              withdrawal: getValueFromField(json, 'fromGrid'),
+              injection: getValueFromField(json, 'toGrid')
+            })
           }
         })
         .catch(err => {
@@ -113,10 +116,10 @@ function App() {
       { (!error && !isLoading) &&
         <div>
           <div className="grid grid-cols-2 gap-y-10">
-            <DisplayData title="Production" value={production} unit="kWh" />
-            <DisplayData title="Consumption" value={consumption} unit="kWh" />
-            <DisplayData title="Grid withdrawal" value={withdrawal} unit="kWh" />
-            <DisplayData title="Grid injection" value={injection} unit="kWh" />
+            <DisplayData title="Production" value={energyData.production} unit="kWh" />
+            <DisplayData title="Consumption" value={energyData.consumption} unit="kWh" />
+            <DisplayData title="Grid withdrawal" value={energyData.withdrawal} unit="kWh" />
+            <DisplayData title="Grid injection" value={energyData.injection} unit="kWh" />
           </div>
         </div>
       }
