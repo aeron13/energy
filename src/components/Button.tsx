@@ -1,9 +1,12 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 
-const Button = ({onClick, children, selected}) => {
+const Button: React.FC<{onClick: MouseEventHandler, children: React.ReactNode, selected: boolean}> = (props) => {
     return (
-        <button onClick={onClick} className={`${selected ? 'bg-black' : 'bg-[#8e8e8e]'} text-white px-5 py-1 rounded`}>
-            {children}
+        <button 
+            onClick={props.onClick} 
+            className={`${props.selected ? 'bg-black' : 'bg-[#8e8e8e]'} text-white px-5 py-1 rounded`}
+        >
+            {props.children}
         </button>
     )
 }
