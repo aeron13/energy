@@ -2,7 +2,6 @@ import { DateTime } from "luxon";
 
 const fetchDyDate = async (url, startDate, endDate) => {
     let data = []
-  
     await fetch(url)
     .then((res) => res.json())
     .then((json) => {

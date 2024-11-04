@@ -1,11 +1,11 @@
+import React from "react";
 import { useEffect } from "react";
-import DisplayData from "./components/DisplayData"; 
+import DisplayData from "./components/DisplayData";
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
 import { useState } from "react";
 import { DateTime } from "luxon";
 import { fetchDyDate } from "./api"
-
 
 const getValueFromField = (array, field) => {
   const initialValue = array[0][field]
@@ -15,8 +15,7 @@ const getValueFromField = (array, field) => {
   }, initialValue ))
 }
 
-
-function App() {
+export default function App() {
 
   const URL = process.env.REACT_APP_URL
   const defaultDate = DateTime.fromISO('2024-10-14')
@@ -125,5 +124,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
