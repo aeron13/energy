@@ -26,8 +26,7 @@ function App() {
   const [selectedDateIndex, setSelectedDateIndex] = useState(0)
 
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [error, setError] = useState({state: false, message: ''})
 
   const [energyData, setEnergyData] = useState({
     production: 0,
@@ -45,8 +44,10 @@ function App() {
           console.log(json)
           setIsLoading(false)
           if (json.length === 0) {
-            setError(true)
-            setErrorMessage('Data not available for selected timespan. Try with a different one')
+            setError({
+              state: true,
+              message: 'Data not available for selected timespan. Try with a different one'
+            })
           } else {
             setEnergyData({
               production: getValueFromField(json, 'prod'),
@@ -59,14 +60,19 @@ function App() {
         .catch(err => {
           console.log(err)
           setIsLoading(false)
-          setError(true)
+          setError({
+            state: true,
+            message: `Error: ${err}`
+          })
         })
       }, 1000)
     }
     return () => { 
       setIsLoading(false)
-      setError(false)
-      setErrorMessage('')
+      setError({
+        state: false,
+        message: ''
+      })
      }
   }, [URL, startDate, endDate] )
 
@@ -123,7 +129,7 @@ function App() {
           </div>
         </div>
       }
-      { (!isLoading && error) && <ErrorMessage message={errorMessage} /> }
+      { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
 
     </div>
   );
