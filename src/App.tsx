@@ -4,27 +4,21 @@ import DisplayData from "./components/DisplayData";
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
 import { DateTime } from "luxon";
-import { fetchDyDate } from "./api"
+import { fetchDyDate, getValueFromField } from "./api"
 
-const getValueFromField = (array: any[], field: string) => {
-  const initialValue = array[0][field]
-  return Math.floor(array.reduce((sum, current) => {
-    if (current[field]) return sum + current[field]
-    return sum
-  }, initialValue ))
-}
 
 export default function App() {
 
   const URL = import.meta.env.VITE_URL ?? ''
-  const defaultDate = DateTime.fromISO('2024-10-14')
+  
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState({state: false, message: ''})
 
+  const defaultDate = DateTime.fromISO('2024-10-14')
   const [startDate, setStartDate] = useState(defaultDate)
   const [endDate, setEndDate] = useState(defaultDate)
   const [selectedDateIndex, setSelectedDateIndex] = useState(0)
 
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState({state: false, message: ''})
 
   const [energyData, setEnergyData] = useState({
     production: 0,
