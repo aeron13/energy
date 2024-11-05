@@ -1,13 +1,5 @@
 import { DateTime } from "luxon";
-
-type TApiData = {
-    ts: string,
-    prod: number,
-    cons: number,
-    self: number,
-    fromGrid: number,
-    toGrid: number
-}
+import type { TApiData } from "./types";
 
 const fetchDyDate = async (url: string, startDate: DateTime, endDate: DateTime) => {
     let data: any[] = []
