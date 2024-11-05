@@ -1,24 +1,23 @@
-import { useState } from 'react'
-import { useEffect } from "react";
+import { useState, useReducer, useEffect } from 'react'
 import DisplayData from "./components/DisplayData";
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
 import { DateTime } from "luxon";
 import { fetchDyDate, getValueFromField } from "./api"
-
+import { datesReducer } from './reducers';
 
 export default function App() {
 
   const URL = import.meta.env.VITE_URL ?? ''
-  
+  const defaultDate = DateTime.fromISO('2024-10-14')
+
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState({state: false, message: ''})
 
-  const defaultDate = DateTime.fromISO('2024-10-14')
-  const [startDate, setStartDate] = useState(defaultDate)
-  const [endDate, setEndDate] = useState(defaultDate)
-  const [selectedDateIndex, setSelectedDateIndex] = useState(0)
-
+  const [dates, updateDates] = useReducer(
+    datesReducer.bind(defaultDate), 
+    {start: defaultDate, end: defaultDate, timespanIndex: 0}
+  )
 
   const [energyData, setEnergyData] = useState({
     production: 0,
@@ -31,7 +30,7 @@ export default function App() {
     if(!isLoading) {
       setIsLoading(true)
       setTimeout(() => {
-        fetchDyDate(URL, startDate, endDate)
+        fetchDyDate(URL, dates.start, dates.end)
         .then(json => {
           console.log(json)
           setIsLoading(false)
@@ -66,47 +65,38 @@ export default function App() {
         message: ''
       })
      }
-  }, [URL, startDate, endDate] )
+  }, [URL, dates] )
 
   const selectTodayValues = () => {
-    setStartDate(defaultDate)
-    setEndDate(defaultDate)
-    setSelectedDateIndex(0)
+    updateDates({timespan: 'today'})
   }
 
   const selectWeeklyValues = () => {
-    setStartDate(defaultDate.minus({days: 6}))
-    setEndDate(defaultDate)
-    setSelectedDateIndex(1)
+    updateDates({timespan: 'week'})
   }
 
   const selectMonthlyValues = () => {
-    setStartDate(defaultDate.set({day: 1}))
-    setEndDate(defaultDate)
-    setSelectedDateIndex(2)
+    updateDates({timespan: 'month'})
   }
 
   const selectLastMonthValues = () => {
-    const lastMonth = defaultDate.minus({month: 1})
-    setStartDate(lastMonth.set({day: 1}))
-    setEndDate(lastMonth.set({day: lastMonth.daysInMonth}))
-    setSelectedDateIndex(3)
+    updateDates({timespan: 'last-month'})
   }
 
   return (
     <div className="pt-60 container mx-auto">
 
       <div className="flex gap-2 mb-3 border-b border-1 py-3">
-        <Button onClick={selectTodayValues} selected={selectedDateIndex === 0}>Today</Button>
-        <Button onClick={selectWeeklyValues} selected={selectedDateIndex === 1}>This week</Button>
-        <Button onClick={selectMonthlyValues} selected={selectedDateIndex === 2}>This month</Button>
-        <Button onClick={selectLastMonthValues} selected={selectedDateIndex === 3}>Last month</Button>
+        <Button onClick={selectTodayValues} selected={dates.timespanIndex === 0}>Today</Button>
+        <Button onClick={selectWeeklyValues} selected={dates.timespanIndex === 1}>This week</Button>
+        <Button onClick={selectMonthlyValues} selected={dates.timespanIndex === 2}>This month</Button>
+        <Button onClick={selectLastMonthValues} selected={dates.timespanIndex === 3}>Last month</Button>
       </div>
       <div className="mb-6">
-        { startDate.toISODate() !== endDate.toISODate() && 
-          <p>Showing values from {startDate.toFormat('MMMM d')} to {endDate.toFormat('MMMM d')}</p>
+        { dates.start.toISODate() !== dates.end.toISODate() && 
+          <p>Showing values from {dates.start.toFormat('MMMM d')} to {dates.end.toFormat('MMMM d')}</p>
         }
-        { startDate.toISODate() === endDate.toISODate() && <p>Showing today values</p>}
+        { dates.start.toISODate() === dates.end.toISODate() && <p>{dates.start.toFormat('MMMM d')}</p>}
       </div>
 
       { isLoading && <div>Loading...</div> }

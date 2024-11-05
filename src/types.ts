@@ -1,3 +1,5 @@
+import { DateTime } from "luxon"
+
 type TApiData = {
     ts: string,
     prod: number,
@@ -13,7 +15,19 @@ type TDisplayData = {
     unit: string
 }
 
+type TDates = {
+    start: DateTime,
+    end: DateTime,
+    timespanIndex: number
+}
+
+type TDatesAction = {
+    timespan: string
+}
+
 export type {
     TApiData,
-    TDisplayData
+    TDisplayData,
+    TDates,
+    TDatesAction
 }
