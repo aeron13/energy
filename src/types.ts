@@ -7,7 +7,7 @@ type TApiData = {
     toGrid: number
 }
 
-type TEnergyData = {
+type TDisplayData = {
     title: string,
     value: number, 
     unit: string
@@ -15,5 +15,5 @@ type TEnergyData = {
 
 export type {
     TApiData,
-    TEnergyData
+    TDisplayData
 }

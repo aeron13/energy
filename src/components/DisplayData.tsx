@@ -1,7 +1,7 @@
 import React from "react";
-import type { TEnergyData } from "../types";
+import type { TDisplayData } from "../types";
 
-const DisplayData: React.FC<TEnergyData> = (props) => {
+const DisplayData: React.FC<TDisplayData> = (props) => {
 
     return (
         <div className="">
