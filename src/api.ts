@@ -21,15 +21,6 @@ const fetchDyDate = async (url: string, startDate: DateTime, endDate: DateTime) 
     return data
 };
 
-const getValueFromField = (array: any[], field: string) => {
-    const initialValue = array[0][field]
-    return Math.floor(array.reduce((sum, current) => {
-      if (current[field]) return sum + current[field]
-      return sum
-    }, initialValue ))
-}
-
 export {
-    fetchDyDate,
-    getValueFromField
+    fetchDyDate
 }

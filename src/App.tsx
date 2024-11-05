@@ -3,8 +3,10 @@ import DisplayData from "./components/DisplayData";
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
 import { DateTime } from "luxon";
-import { fetchDyDate, getValueFromField } from "./api"
+import { fetchDyDate } from "./api"
 import { datesReducer } from './reducers';
+import { getValueFromField, getDayAverageFromField, getAverageFromField } from './getters'; 
+
 
 export default function App() {
 
@@ -26,13 +28,16 @@ export default function App() {
     injection: 0
   })
 
+  const [averageProd, setAverageProd] = useState(0)
+  const [averageProdByDay, setAverageProdByDay] = useState(0)
+
   useEffect(() => {
     if(!isLoading) {
       setIsLoading(true)
       setTimeout(() => {
         fetchDyDate(URL, dates.start, dates.end)
         .then(json => {
-          console.log(json)
+          // console.log(json)
           setIsLoading(false)
           if (json.length === 0) {
             setError({
@@ -46,6 +51,8 @@ export default function App() {
               withdrawal: getValueFromField(json, 'fromGrid'),
               injection: getValueFromField(json, 'toGrid')
             })
+            setAverageProd(getAverageFromField(json, 'prod'))
+            setAverageProdByDay(getDayAverageFromField(json, 'prod'))
           }
         })
         .catch(err => {
@@ -109,10 +116,19 @@ export default function App() {
             <DisplayData title="Grid withdrawal" value={energyData.withdrawal} unit="kWh" />
             <DisplayData title="Grid injection" value={energyData.injection} unit="kWh" />
           </div>
+          {/* <p className='mt-6'>Production - consumption: {energyData.production - energyData.consumption}</p>
+          <p className='mt-6'>Grid with - grid inj: {energyData.withdrawal - energyData.injection}</p> */}
+
+          { dates.timespanIndex !== 0 &&
+           <div className='mt-6'>
+            <p className=''>Average production: {averageProd}</p>
+            <p>Average production by day: {averageProdByDay}</p>
+          </div>
+          }
         </div>
       }
       { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
-
+    
     </div>
   );
 }
