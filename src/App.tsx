@@ -24,8 +24,8 @@ export default function App() {
   const [selectedDateIndex, setSelectedDateIndex] = useState(0)
 
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [error, setError] = useState({state: false, message: ''})
+
   // const [json, setJson] = useState()
 
   const [production, setProduction] = useState(0);
@@ -42,8 +42,10 @@ export default function App() {
           console.log(json)
           setIsLoading(false)
           if (json.length === 0) {
-            setError(true)
-            setErrorMessage('Data not available for selected timespan. Try with a different one')
+            setError({
+              state: true,
+              message: 'Data not available for selected timespan. Try with a different one'
+            })
           } else {
             setProduction(getValueFromField(json, 'prod'))
             setConsumption(getValueFromField(json, 'cons'))
@@ -54,14 +56,19 @@ export default function App() {
         .catch(err => {
           console.log(err)
           setIsLoading(false)
-          setError(true)
+          setError({
+            state: true,
+            message: `Error: ${err}`
+          })
         })
       }, 1000)
     }
     return () => { 
       setIsLoading(false)
-      setError(false)
-      setErrorMessage('')
+      setError({
+        state: false,
+        message: ''
+      })
      }
   }, [URL, startDate, endDate] )
 
@@ -108,7 +115,7 @@ export default function App() {
 
       { isLoading && <div>Loading...</div> }
 
-      { (!error && !isLoading) &&
+      { (!error.state && !isLoading) &&
         <div>
           <div className="grid grid-cols-2 gap-y-10">
             <DisplayData title="Production" value={production} unit="kWh" />
@@ -118,7 +125,7 @@ export default function App() {
           </div>
         </div>
       }
-      { (!isLoading && error) && <ErrorMessage message={errorMessage} /> }
+      { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
 
     </div>
   );
