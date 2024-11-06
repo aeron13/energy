@@ -3,10 +3,10 @@ import DisplayData from "./components/DisplayData";
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
 import { DateTime } from "luxon";
-import { fetchDyDate } from "./api"
-import { datesReducer } from './reducers';
-import { getValueFromField, getDayAverageFromField, getAverageRateFromFields } from './getters'; 
-
+import { fetchDyDate } from "./ts/api"
+import { datesReducer } from './ts/reducers';
+import { getValueFromField, getDayAverageFromField, getAverageRateFromFields } from './ts/getters'; 
+import { num, numW } from './ts/formatters';
 
 export default function App() {
 
@@ -104,7 +104,7 @@ export default function App() {
       </div>
       <div className="mb-6">
         { dates.start.toISODate() !== dates.end.toISODate() && 
-          <p>Showing values from {dates.start.toFormat('MMMM d')} to {dates.end.toFormat('MMMM d')}</p>
+          <p>From {dates.start.toFormat('MMMM d')} to {dates.end.toFormat('MMMM d')}</p>
         }
         { dates.start.toISODate() === dates.end.toISODate() && <p>{dates.start.toFormat('MMMM d')}</p>}
       </div>
@@ -114,10 +114,10 @@ export default function App() {
       { (!error.state && !isLoading) &&
         <div>
           <div className="grid grid-cols-2 gap-y-10">
-            <DisplayData title="Production" value={energyData.production} unit="kWh" />
-            <DisplayData title="Consumption" value={energyData.consumption} unit="kWh" />
-            <DisplayData title="Grid withdrawal" value={energyData.withdrawal} unit="kWh" />
-            <DisplayData title="Grid injection" value={energyData.injection} unit="kWh" />
+            <DisplayData title="Production" value={num(energyData.production)} unit="kW" />
+            <DisplayData title="Consumption" value={num(energyData.consumption)} unit="kW" />
+            <DisplayData title="Grid withdrawal" value={num(energyData.withdrawal)} unit="kW" />
+            <DisplayData title="Grid injection" value={num(energyData.injection)} unit="kW" />
           </div>
           <p className='mt-6'>Production - consumption: {energyData.production - energyData.consumption}</p>
           <p>Grid with - grid inj: {energyData.withdrawal - energyData.injection}</p>
@@ -125,10 +125,10 @@ export default function App() {
           { dates.timespanIndex !== 0 &&
            <div className='mt-6'>
             {/* <p className=''>Average production: {averageProd}</p> */}
-            <p>Average production by day: {energyData.averageProdByDay}</p>
-            <p>Average consumption by day: {energyData.averageConsByDay}</p>
-            <p>Average grid injection by day: {energyData.averageToGridByDay}</p>
-            <p>Average rate of grid injection / production: {energyData.averageRate}%</p>
+            <p>Average production by day: {numW(energyData.averageProdByDay)}</p>
+            <p>Average consumption by day: {numW(energyData.averageConsByDay)}</p>
+            <p>Average grid injection by day: {numW(energyData.averageToGridByDay)}</p>
+            <p>Average rate of grid injection / production: {num(energyData.averageRate)}%</p>
           </div>
           }
         </div>

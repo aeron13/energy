@@ -1,5 +1,5 @@
 import React from "react";
-import type { TDisplayData } from "../types";
+import type { TDisplayData } from "../ts/types";
 
 const DisplayData: React.FC<TDisplayData> = (props) => {
 

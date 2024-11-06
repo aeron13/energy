@@ -11,7 +11,7 @@ type TApiData = {
 
 type TDisplayData = {
     title: string,
-    value: number, 
+    value: number|string, 
     unit: string
 }
 
