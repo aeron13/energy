@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 /**
  * Given an array of energy data ordered by date and a field (es. 'prod'), 
  * returns an array of numbers where each number is the average value of <field> for that day
@@ -41,6 +43,30 @@ const dailyValuesFromField = (array: any[], field: string): number[] => {
   })
 
   return sums;
+}
+
+const getValuesFromField = (array: any[], field: string): any[] => {
+  return array.map(obj => obj[field].toFixed(2))
+}
+
+const getTimestamps = (array: any[]): any[] => {
+  if (array.length === 24) {
+    return array.map(obj => obj.ts.slice(11, 16))
+  }
+  else {
+    // const days = [1];
+    // for (let i = 2; i < 31; i++) {
+    //   days.push(i)
+    // }
+    // return days
+    return array.filter((obj, i) => {
+      const day = obj.ts.slice(8, 10)
+      if (i === 0) return day
+        else if (array[i-1].ts.slice(8, 10) !== day) {
+          return day
+        }
+    }).map(obj => obj.ts.slice(8, 10))
+  }
 }
 
 /**
@@ -124,7 +150,9 @@ const getAverageFromField = (array: any[], field: string) => {
 
 export {
     getValueFromField,
+    getValuesFromField,
     getAverageFromField,
     getDayAverageFromField,
-    getAverageRateFromFields
+    getAverageRateFromFields,
+    getTimestamps
 }

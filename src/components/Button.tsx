@@ -4,7 +4,7 @@ const Button: React.FC<{onClick: MouseEventHandler, children: React.ReactNode, s
     return (
         <button 
             onClick={props.onClick} 
-            className={`${props.selected ? 'bg-black' : 'bg-[#8e8e8e]'} text-white px-5 py-1 rounded`}
+            className={`${props.selected ? 'bg-teal text-white' : 'text-teal'} border border-teal px-5 py-1 rounded`}
         >
             {props.children}
         </button>

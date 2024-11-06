@@ -12,7 +12,8 @@ type TApiData = {
 type TDisplayData = {
     title: string,
     value: number|string, 
-    unit: string
+    unit: string,
+    color: string|undefined
 }
 
 type TDates = {

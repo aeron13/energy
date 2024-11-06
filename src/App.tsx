@@ -1,17 +1,18 @@
 import { useState, useReducer, useEffect } from 'react'
-import DisplayData from "./components/DisplayData";
+import DisplayData from './components/DisplayData';
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
+import Chart from './components/Chart';
 import { DateTime } from "luxon";
 import { fetchDyDate } from "./ts/api"
 import { datesReducer } from './ts/reducers';
-import { getValueFromField, getDayAverageFromField, getAverageRateFromFields } from './ts/getters'; 
+import { getValueFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
 import { num, numW } from './ts/formatters';
 
 export default function App() {
 
   const URL = import.meta.env.VITE_URL ?? ''
-  const defaultDate = DateTime.fromISO('2024-10-14')
+  const defaultDate = DateTime.fromISO('2024-10-12')
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState({state: false, message: ''})
@@ -21,9 +22,11 @@ export default function App() {
     {start: defaultDate, end: defaultDate, timespanIndex: 0}
   )
 
+  const [timestamps, setTimestamps] = useState([{}])
+
   const [energyData, setEnergyData] = useState({
-    production: 0,
-    consumption: 0,
+    production: [0],
+    consumption: [0],
     withdrawal: 0,
     injection: 0,
     averageProdByDay: 0,
@@ -46,9 +49,10 @@ export default function App() {
               message: 'Data not available for selected timespan. Try with a different one'
             })
           } else {
+            console.log(json)
             setEnergyData({
-              production: getValueFromField(json, 'prod'),
-              consumption: getValueFromField(json, 'cons'),
+              production: getValuesFromField(json, 'prod'),
+              consumption: getValuesFromField(json, 'cons'),
               withdrawal: getValueFromField(json, 'fromGrid'),
               injection: getValueFromField(json, 'toGrid'),
               averageProdByDay: getDayAverageFromField(json, 'prod'),
@@ -56,6 +60,8 @@ export default function App() {
               averageToGridByDay: getDayAverageFromField(json, 'toGrid'),
               averageRate: getAverageRateFromFields(json, 'prod', 'toGrid')
             })
+            setTimestamps(getTimestamps(json))
+            console.log(timestamps)
           }
         })
         .catch(err => {
@@ -94,7 +100,7 @@ export default function App() {
   }
 
   return (
-    <div className="pt-20 container mx-auto">
+    <div className="pt-10 container mx-auto">
 
       <div className="flex gap-2 mb-3 border-b border-1 py-3">
         <Button onClick={selectTodayValues} selected={dates.timespanIndex === 0}>Today</Button>
@@ -111,28 +117,31 @@ export default function App() {
 
       { isLoading && <div>Loading...</div> }
 
-      { (!error.state && !isLoading) &&
         <div>
-          <div className="grid grid-cols-2 gap-y-10">
-            <DisplayData title="Production" value={num(energyData.production)} unit="kW" />
-            <DisplayData title="Consumption" value={num(energyData.consumption)} unit="kW" />
-            <DisplayData title="Grid withdrawal" value={num(energyData.withdrawal)} unit="kW" />
-            <DisplayData title="Grid injection" value={num(energyData.injection)} unit="kW" />
+          <div className='grid lg:grid-cols-4'>
+            <div className='lg:col-span-3'>
+              <Chart 
+                data={[
+                  {type: 'Production', data: energyData.production},
+                  {type: 'Consumption', data: energyData.consumption}
+                ]} 
+                timestamps={timestamps}
+                loading={isLoading}
+              />
+            </div>
+            <div className='pl-12'>
+              { (!isLoading) &&
+              <div className='mt-6 flex flex-col gap-6'>
+                <DisplayData title="Average production by day" value={num(energyData.averageProdByDay)} unit="kW" color="text-teal" />
+                <DisplayData title="Average consumption by day" value={num(energyData.averageConsByDay)} unit="kW" color="text-orange" />
+                <DisplayData title="Average grid injection by day" value={num(energyData.averageToGridByDay)} unit="kW" color="" />
+                <DisplayData title="Average rate of grid injection / production" value={num(energyData.averageRate)} unit="%" color="" />
+              </div>
+              }
+            </div>
           </div>
-          <p className='mt-6'>Production - consumption: {energyData.production - energyData.consumption}</p>
-          <p>Grid with - grid inj: {energyData.withdrawal - energyData.injection}</p>
-
-          { dates.timespanIndex !== 0 &&
-           <div className='mt-6'>
-            {/* <p className=''>Average production: {averageProd}</p> */}
-            <p>Average production by day: {numW(energyData.averageProdByDay)}</p>
-            <p>Average consumption by day: {numW(energyData.averageConsByDay)}</p>
-            <p>Average grid injection by day: {numW(energyData.averageToGridByDay)}</p>
-            <p>Average rate of grid injection / production: {num(energyData.averageRate)}%</p>
-          </div>
-          }
         </div>
-      }
+      
       { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
     
     </div>
