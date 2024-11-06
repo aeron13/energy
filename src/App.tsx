@@ -41,7 +41,6 @@ export default function App() {
       setTimeout(() => {
         fetchDyDate(URL, dates.start, dates.end)
         .then(json => {
-          // console.log(json)
           setIsLoading(false)
           if (json.length === 0) {
             setError({
@@ -49,7 +48,6 @@ export default function App() {
               message: 'Data not available for selected timespan. Try with a different one'
             })
           } else {
-            console.log(json)
             setEnergyData({
               production: getValuesFromField(json, 'prod'),
               consumption: getValuesFromField(json, 'cons'),
@@ -61,7 +59,6 @@ export default function App() {
               averageRate: getAverageRateFromFields(json, 'prod', 'toGrid')
             })
             setTimestamps(getTimestamps(json))
-            console.log(timestamps)
           }
         })
         .catch(err => {
@@ -116,6 +113,7 @@ export default function App() {
       </div>
 
       { isLoading && <div>Loading...</div> }
+      { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
 
         <div>
           <div className='grid lg:grid-cols-4'>
@@ -141,10 +139,7 @@ export default function App() {
               }
             </div>
           </div>
-        </div>
-      
-      { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
-    
+        </div>    
     </div>
   );
 }

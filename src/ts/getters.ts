@@ -34,7 +34,10 @@ const dailyValuesFromField = (array: any[], field: string): number[] => {
   array.forEach((obj, i) => {
     if(i === 0) {
       daySum = obj[field] ?? 0
-    } else if (array[i-1].ts.slice(0, 10) === obj.ts.slice(0, 10)) {
+    } else if (i === array.length - 1 && array.length === 24) {
+      sums.push(daySum);
+    }
+    else if (array[i-1].ts.slice(0, 10) === obj.ts.slice(0, 10)) {
         daySum += obj[field]
     } else {
       sums.push(daySum);
@@ -46,7 +49,10 @@ const dailyValuesFromField = (array: any[], field: string): number[] => {
 }
 
 const getValuesFromField = (array: any[], field: string): any[] => {
-  return array.map(obj => obj[field].toFixed(2))
+  if (array.length === 24) {
+    return array.map(obj => obj[field]?.toFixed(2))
+  }
+  return dailyValuesFromField(array, field)
 }
 
 const getTimestamps = (array: any[]): any[] => {
@@ -123,13 +129,16 @@ const getDayAverageFromField = (array: any[], field: string) => {
 
     if (dailyValues.length < 1)
         return 0
+
+    if (dailyValues.length === 1 && array.length === 24)
+      return Math.floor(dailyValues[0] / 24)
     
     let sum = dailyValues.reduce((sum, curr) => {
       if (!sum || !curr) return 0
       return sum + curr
     })
   
-    return Math.floor(sum / dayAverages.length)
+    return Math.floor(sum / dailyValues.length)
 }
 
 /**
