@@ -5,7 +5,7 @@ import Button from "./components/Button";
 import { DateTime } from "luxon";
 import { fetchDyDate } from "./api"
 import { datesReducer } from './reducers';
-import { getValueFromField, getDayAverageFromField, getAverageFromField } from './getters'; 
+import { getValueFromField, getDayAverageFromField, getAverageRateFromFields } from './getters'; 
 
 
 export default function App() {
@@ -25,11 +25,12 @@ export default function App() {
     production: 0,
     consumption: 0,
     withdrawal: 0,
-    injection: 0
+    injection: 0,
+    averageProdByDay: 0,
+    averageConsByDay: 0,
+    averageToGridByDay: 0,
+    averageRate: 0
   })
-
-  const [averageProd, setAverageProd] = useState(0)
-  const [averageProdByDay, setAverageProdByDay] = useState(0)
 
   useEffect(() => {
     if(!isLoading) {
@@ -49,10 +50,12 @@ export default function App() {
               production: getValueFromField(json, 'prod'),
               consumption: getValueFromField(json, 'cons'),
               withdrawal: getValueFromField(json, 'fromGrid'),
-              injection: getValueFromField(json, 'toGrid')
+              injection: getValueFromField(json, 'toGrid'),
+              averageProdByDay: getDayAverageFromField(json, 'prod'),
+              averageConsByDay: getDayAverageFromField(json, 'cons'),
+              averageToGridByDay: getDayAverageFromField(json, 'toGrid'),
+              averageRate: getAverageRateFromFields(json, 'prod', 'toGrid')
             })
-            setAverageProd(getAverageFromField(json, 'prod'))
-            setAverageProdByDay(getDayAverageFromField(json, 'prod'))
           }
         })
         .catch(err => {
@@ -91,7 +94,7 @@ export default function App() {
   }
 
   return (
-    <div className="pt-60 container mx-auto">
+    <div className="pt-20 container mx-auto">
 
       <div className="flex gap-2 mb-3 border-b border-1 py-3">
         <Button onClick={selectTodayValues} selected={dates.timespanIndex === 0}>Today</Button>
@@ -116,13 +119,16 @@ export default function App() {
             <DisplayData title="Grid withdrawal" value={energyData.withdrawal} unit="kWh" />
             <DisplayData title="Grid injection" value={energyData.injection} unit="kWh" />
           </div>
-          {/* <p className='mt-6'>Production - consumption: {energyData.production - energyData.consumption}</p>
-          <p className='mt-6'>Grid with - grid inj: {energyData.withdrawal - energyData.injection}</p> */}
+          <p className='mt-6'>Production - consumption: {energyData.production - energyData.consumption}</p>
+          <p>Grid with - grid inj: {energyData.withdrawal - energyData.injection}</p>
 
           { dates.timespanIndex !== 0 &&
            <div className='mt-6'>
-            <p className=''>Average production: {averageProd}</p>
-            <p>Average production by day: {averageProdByDay}</p>
+            {/* <p className=''>Average production: {averageProd}</p> */}
+            <p>Average production by day: {energyData.averageProdByDay}</p>
+            <p>Average consumption by day: {energyData.averageConsByDay}</p>
+            <p>Average grid injection by day: {energyData.averageToGridByDay}</p>
+            <p>Average rate of grid injection / production: {energyData.averageRate}%</p>
           </div>
           }
         </div>
