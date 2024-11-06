@@ -34,7 +34,7 @@ const dailyValuesFromField = (array: any[], field: string): number[] => {
   array.forEach((obj, i) => {
     if(i === 0) {
       daySum = obj[field] ?? 0
-    } else if (i === array.length - 1 && array.length === 24) {
+    } else if (i === array.length - 1) {
       sums.push(daySum);
     }
     else if (array[i-1].ts.slice(0, 10) === obj.ts.slice(0, 10)) {
