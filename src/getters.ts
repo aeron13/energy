@@ -12,7 +12,7 @@ const dayAverages = (array: any[], field: string): number[] => {
           daySum += obj[field]
       } else {
         averages.push(daySum / 24);
-        daySum = 0;
+        daySum = obj[field];
       }
     })
     return averages
