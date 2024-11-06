@@ -52,26 +52,36 @@ const getValuesFromField = (array: any[], field: string): any[] => {
   if (array.length === 24) {
     return array.map(obj => obj[field]?.toFixed(2))
   }
-  return dailyValuesFromField(array, field)
+  return dailyValuesFromField(array, field).map(val => Math.floor(val))
 }
 
-const getTimestamps = (array: any[]): any[] => {
-  if (array.length === 24) {
-    return array.map(obj => obj.ts.slice(11, 16))
-  }
-  else {
-    // const days = [1];
-    // for (let i = 2; i < 31; i++) {
-    //   days.push(i)
-    // }
-    // return days
-    return array.filter((obj, i) => {
-      const day = obj.ts.slice(8, 10)
-      if (i === 0) return day
-        else if (array[i-1].ts.slice(8, 10) !== day) {
-          return day
+const getTimestamps = (array: any[], type: number): any[] => {
+  switch(type) {
+    case 0: {
+      return array.map(obj => obj.ts.slice(11, 16))
+    }
+    case 1: {
+      return array.filter((obj, i) => {
+        const day = obj.ts.slice(8, 10)
+        if (i === 0) return day
+          else if (array[i-1].ts.slice(8, 10) !== day) {
+            return day
+          }
+      }).map(obj => { 
+        const day = obj.ts.slice(0, 10)
+        return DateTime.fromISO(day).toFormat('EEE dd')
+      })
+    }
+    default: {
+      let day = DateTime.fromISO(array[0].ts.slice(0, 10))
+      let days: string[] = []
+      if (day.daysInMonth) {
+        for (let i = 1; i <= day.daysInMonth; i++ ) {
+          days.push(day.set({day: i}).toFormat('dd'))
         }
-    }).map(obj => obj.ts.slice(8, 10))
+      }
+      return days;
+    }
   }
 }
 

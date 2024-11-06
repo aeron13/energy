@@ -7,7 +7,7 @@ import { DateTime } from "luxon";
 import { fetchDyDate } from "./ts/api"
 import { datesReducer } from './ts/reducers';
 import { getValueFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
-import { num, numW } from './ts/formatters';
+import { num } from './ts/formatters';
 
 export default function App() {
 
@@ -29,10 +29,13 @@ export default function App() {
     consumption: [0],
     withdrawal: [0],
     injection: [0],
+    totalProduction: 0,
+    totalConsumption: 0,
     averageProdByDay: 0,
     averageConsByDay: 0,
     averageToGridByDay: 0,
-    averageRate: 0
+    averageRate: 0,
+    consumptionRate: 0
   })
 
   useEffect(() => {
@@ -53,12 +56,15 @@ export default function App() {
               consumption: getValuesFromField(json, 'cons'),
               withdrawal: getValuesFromField(json, 'fromGrid'),
               injection: getValuesFromField(json, 'toGrid'),
+              totalProduction: getValueFromField(json, 'prod'),
+              totalConsumption: getValueFromField(json, 'cons'),
               averageProdByDay: getDayAverageFromField(json, 'prod'),
               averageConsByDay: getDayAverageFromField(json, 'cons'),
               averageToGridByDay: getDayAverageFromField(json, 'toGrid'),
-              averageRate: getAverageRateFromFields(json, 'prod', 'toGrid')
+              averageRate: getAverageRateFromFields(json, 'prod', 'toGrid'),
+              consumptionRate: getAverageRateFromFields(json, 'cons', 'self')
             })
-            setTimestamps(getTimestamps(json))
+            setTimestamps(getTimestamps(json, dates.timespanIndex))
           }
         })
         .catch(err => {
@@ -107,9 +113,9 @@ export default function App() {
       </div>
       <div className="mb-6">
         { dates.start.toISODate() !== dates.end.toISODate() && 
-          <p>From {dates.start.toFormat('MMMM d')} to {dates.end.toFormat('MMMM d')}</p>
+          <p>From {dates.start.toFormat('MMMM dd, y')} to {dates.end.toFormat('MMMM dd, y')}</p>
         }
-        { dates.start.toISODate() === dates.end.toISODate() && <p>{dates.start.toFormat('MMMM d')}</p>}
+        { dates.start.toISODate() === dates.end.toISODate() && <p>{dates.start.toFormat('MMMM dd, y')}</p>}
       </div>
 
       { isLoading && <div>Loading...</div> }
@@ -129,12 +135,13 @@ export default function App() {
               />
             </div>
             <div className='pl-12'>
-              { (!isLoading) &&
+              { (!isLoading && !error.state) &&
               <div className='mt-6 flex flex-col gap-6'>
-                <DisplayData title="Average production by day" value={num(energyData.averageProdByDay)} unit="kWh" color="text-teal" />
-                <DisplayData title="Average consumption by day" value={num(energyData.averageConsByDay)} unit="kWh" color="text-orange" />
+                <DisplayData title="Production" value={num(energyData.totalProduction)} unit="kWh" color="text-teal" />
+                <DisplayData title="Consumption" value={num(energyData.totalConsumption)} unit="kWh" color="text-orange" />
                 <DisplayData title="Average grid injection by day" value={num(energyData.averageToGridByDay)} unit="kWh" color="" />
                 <DisplayData title="Average rate of grid injection / production" value={num(energyData.averageRate)} unit="%" color="" />
+                <DisplayData title="Average rate of self consumption / production" value={num(energyData.consumptionRate)} unit="%" color="" />
               </div>
               }
             </div>
