@@ -1,4 +1,7 @@
-
+/**
+ * Given an array of energy data ordered by date and a field (es. 'prod'), 
+ * returns an array of numbers where each number is the average value of <field> for that day
+ */
 const dayAverages = (array: any[], field: string): number[] => {
     let daySum = 0;
     const averages: number[] = [];
@@ -15,7 +18,11 @@ const dayAverages = (array: any[], field: string): number[] => {
     return averages
 }
 
-const getValueFromField = (array: any[], field: string) => {
+/**
+ * Given an array of energy data and a field (es. 'prod'),
+ * returns the sum of all the <field> values.
+ */
+const getValueFromField = (array: any[], field: string): number => {
     const initialValue = array[0][field]
     return Math.floor(array.reduce((sum, current) => {
       if (current[field]) return sum + current[field]
@@ -23,7 +30,12 @@ const getValueFromField = (array: any[], field: string) => {
     }, initialValue ))
 }
 
-const getAverageRateFromFields = (array: any[], field1: string, field2: string) => {
+/**
+* Given an array of energy data ordered by date and 2 fields (es. 'prod' and 'toGrid'),
+* returns the daily average percentage of the 2nd field compared to the 1st field:
+* for example, the daily average percentage of produced energy that was injected to the grid. 
+*/
+const getAverageRateFromFields = (array: any[], field1: string, field2: string): number => {
 
     if (array.length === 0)
         return 0
@@ -47,7 +59,10 @@ const getAverageRateFromFields = (array: any[], field1: string, field2: string) 
     return Math.floor(sum / rates.length)
 }
 
-
+/**
+ * Given an array of energy data ordered by date and a field (es. 'prod'),
+ * returns the daily average value of that field.
+ */
 const getDayAverageFromField = (array: any[], field: string) => {
 
     if (array.length === 0)
@@ -65,7 +80,11 @@ const getDayAverageFromField = (array: any[], field: string) => {
   
     return Math.floor(sum / dayAverages.length)
 }
-  
+
+/**
+ * Given an array of energy data and a field (es. 'prod'),
+ * returns the average value of that field (not grouped by day).
+ */
 const getAverageFromField = (array: any[], field: string) => {
     if (array.length === 0)
       return 0
