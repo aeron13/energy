@@ -6,7 +6,7 @@ import Chart from './components/Chart';
 import { DateTime } from "luxon";
 import { fetchDyDate } from "./ts/api"
 import { datesReducer } from './ts/reducers';
-import { getValueFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
+import { getTotalAmountFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
 import { num } from './ts/formatters';
 
 export default function App() {
@@ -56,8 +56,8 @@ export default function App() {
               consumption: getValuesFromField(json, 'cons', dates.isDailyView),
               withdrawal: getValuesFromField(json, 'fromGrid', dates.isDailyView),
               injection: getValuesFromField(json, 'toGrid', dates.isDailyView),
-              totalProduction: getValueFromField(json, 'prod'),
-              totalConsumption: getValueFromField(json, 'cons'),
+              totalProduction: getTotalAmountFromField(json, 'prod'),
+              totalConsumption: getTotalAmountFromField(json, 'cons'),
               averageProdByDay: getDayAverageFromField(json, 'prod'),
               averageConsByDay: getDayAverageFromField(json, 'cons'),
               averageToGridByDay: getDayAverageFromField(json, 'toGrid'),

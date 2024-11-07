@@ -95,7 +95,7 @@ const getTimestamps = (array: TApiData[], type: number): any[] => {
  * Given an array of energy data and a field (es. 'prod'),
  * returns the sum of all the <field> values.
  */
-const getValueFromField = (array: TApiData[], field: TApiField): number => {
+const getTotalAmountFromField = (array: TApiData[], field: TApiField): number => {
     const initialValue = array[0][field]
     return Math.floor(array.reduce((sum, current) => {
       if (current[field]) return sum + current[field]
@@ -174,7 +174,7 @@ const getAverageFromField = (array: TApiData[], field: TApiField) => {
 }
 
 export {
-    getValueFromField,
+    getTotalAmountFromField,
     getValuesFromField,
     getAverageFromField,
     getDayAverageFromField,
