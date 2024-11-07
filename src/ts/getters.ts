@@ -44,13 +44,13 @@ const getValuesFromField = (array: TApiData[], field: TApiField, dailyView = fal
 /**
  * Generates an array of date or time values for the chart
  */
-const getTimestamps = (array: TApiData[], type: number): string[] => {
+const getTimestamps = (array: TApiData[], type: string): string[] => {
   switch(type) {
-    case 0: {
+    case 'day': {
       // daily view
       return array.map(obj => obj.ts.slice(11, 16))
     }
-    case 1: {
+    case 'week': {
       // weekly view
       return array.filter((obj, i) => {
         const day = obj.ts.slice(8, 10)

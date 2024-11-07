@@ -10,7 +10,7 @@ function datesReducer(this: DateTime|undefined, state: TDates, action: TDatesAct
             return {
                 start: defaultDate,
                 end: defaultDate,
-                timespanIndex: 0,
+                timespan: 'day',
                 isDailyView: true
             }
         }
@@ -18,7 +18,7 @@ function datesReducer(this: DateTime|undefined, state: TDates, action: TDatesAct
             return {
                 start: defaultDate.minus({days: 6}),
                 end: defaultDate,
-                timespanIndex: 1,
+                timespan: 'week',
                 isDailyView: false
             }
         }
@@ -26,7 +26,7 @@ function datesReducer(this: DateTime|undefined, state: TDates, action: TDatesAct
             return {
                 start: defaultDate.set({day: 1}),
                 end: defaultDate,
-                timespanIndex: 2,
+                timespan: 'month',
                 isDailyView: false
             }
         }
@@ -35,7 +35,7 @@ function datesReducer(this: DateTime|undefined, state: TDates, action: TDatesAct
             return {
                 start: lastMonth.set({day: 1}),
                 end: lastMonth.set({day: lastMonth.daysInMonth}),
-                timespanIndex: 3,
+                timespan: 'last-month',
                 isDailyView: false
             }
         }

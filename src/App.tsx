@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect } from 'react'
+import { useState, useReducer, useEffect } from 'react';
 import DisplayData from './components/DisplayData';
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
@@ -20,7 +20,7 @@ export default function App() {
 
   const [dates, updateDates] = useReducer(
     datesReducer.bind(defaultDate), 
-    {start: defaultDate, end: defaultDate, timespanIndex: 0, isDailyView: true}
+    {start: defaultDate, end: defaultDate, timespan: 'day', isDailyView: true}
   )
 
   const [timestamps, setTimestamps] = useState([''])
@@ -65,7 +65,7 @@ export default function App() {
               averageRate: getAverageRateFromFields(json, 'prod', 'toGrid'),
               consumptionRate: getAverageRateFromFields(json, 'cons', 'self')
             })
-            setTimestamps(getTimestamps(json, dates.timespanIndex))
+            setTimestamps(getTimestamps(json, dates.timespan))
           }
         })
         .catch(err => {
@@ -107,10 +107,10 @@ export default function App() {
     <div className="pt-10 container mx-auto">
 
       <div className="flex gap-2 mb-3 border-b border-1 py-3">
-        <Button onClick={selectTodayValues} selected={dates.timespanIndex === 0}>Today</Button>
-        <Button onClick={selectWeeklyValues} selected={dates.timespanIndex === 1}>This week</Button>
-        <Button onClick={selectMonthlyValues} selected={dates.timespanIndex === 2}>This month</Button>
-        <Button onClick={selectLastMonthValues} selected={dates.timespanIndex === 3}>Last month</Button>
+        <Button onClick={selectTodayValues} selected={dates.timespan === 'day'}>Today</Button>
+        <Button onClick={selectWeeklyValues} selected={dates.timespan === 'week'}>This week</Button>
+        <Button onClick={selectMonthlyValues} selected={dates.timespan === 'month'}>This month</Button>
+        <Button onClick={selectLastMonthValues} selected={dates.timespan === 'last-month'}>Last month</Button>
       </div>
       <div className="mb-6">
         { dates.start.toISODate() !== dates.end.toISODate() && 

@@ -16,7 +16,7 @@ type TApiField = 'prod' | 'cons' | 'self' | 'fromGrid' | 'toGrid'
 type TDates = {
     start: DateTime,
     end: DateTime,
-    timespanIndex: number,
+    timespan: string,
     isDailyView: boolean
 }
 
