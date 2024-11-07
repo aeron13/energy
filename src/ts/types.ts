@@ -9,6 +9,8 @@ type TApiData = {
     toGrid: number
 }
 
+type TNum = number | string
+
 type TApiField = 'prod' | 'cons' | 'self' | 'fromGrid' | 'toGrid'
 
 type TDisplayData = {
@@ -30,6 +32,7 @@ type TDatesAction = {
 }
 
 export type {
+    TNum,
     TApiData,
     TApiField,
     TDisplayData,

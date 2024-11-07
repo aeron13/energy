@@ -1,25 +1,5 @@
 import { DateTime } from "luxon";
-import { TApiData, TApiField } from "./types";
-
-/**
- * Given an array of energy data ordered by date and a field (es. 'prod'), 
- * returns an array of numbers where each number is the average value of <field> for that day
- */
-const dayAverages = (array: any[], field: string): number[] => {
-    let daySum = 0;
-    const averages: number[] = [];
-    array.forEach((obj, i) => {
-      if(i === 0) {
-        daySum = obj[field] ?? 0
-      } else if (array[i-1].ts.slice(0, 10) === obj.ts.slice(0, 10)) {
-          daySum += obj[field]
-      } else {
-        averages.push(daySum / 24);
-        daySum = obj[field];
-      }
-    })
-    return averages
-}
+import { TApiData, TApiField, TNum } from "./types";
 
 /**
  * Given an array of energy data ordered by date and a field (es. 'prod'), 
@@ -51,8 +31,8 @@ const dailyValuesFromField = (array: TApiData[], field: TApiField): number[] => 
 
 /**
  * Given an array of energy data ordered by date and a field (es. 'prod'), 
- * returns an array of numbers where each number is the daily total amount for that field.
- * For example, returns the daily amounts of production for each day present in the array.
+ * if it's the daily view returns the array of <field> values.
+ * If not, returns an array containing the total amount of <field> for each day
  */
 const getValuesFromField = (array: TApiData[], field: TApiField, dailyView = false): any[] => {
   if (dailyView) {
@@ -61,12 +41,17 @@ const getValuesFromField = (array: TApiData[], field: TApiField, dailyView = fal
   return dailyValuesFromField(array, field).map(val => Math.floor(val))
 }
 
-const getTimestamps = (array: TApiData[], type: number): any[] => {
+/**
+ * Generates an array of date or time values for the chart
+ */
+const getTimestamps = (array: TApiData[], type: number): string[] => {
   switch(type) {
     case 0: {
+      // daily view
       return array.map(obj => obj.ts.slice(11, 16))
     }
     case 1: {
+      // weekly view
       return array.filter((obj, i) => {
         const day = obj.ts.slice(8, 10)
         if (i === 0) return day
@@ -79,6 +64,7 @@ const getTimestamps = (array: TApiData[], type: number): any[] => {
       })
     }
     default: {
+      // monthly view
       let day = DateTime.fromISO(array[0].ts.slice(0, 10))
       let days: string[] = []
       if (day.daysInMonth) {
@@ -173,7 +159,28 @@ const getAverageFromField = (array: TApiData[], field: TApiField) => {
     return Math.floor(sum / array.length)
 }
 
+/**
+ * Given an array of energy data ordered by date and a field (es. 'prod'), 
+ * returns an array of numbers where each number is the average value of <field> for that day
+ */
+const getDayAverages = (array: TApiData[], field: TApiField): number[] => {
+  let daySum = 0;
+  const averages: number[] = [];
+  array.forEach((obj, i) => {
+    if(i === 0) {
+      daySum = obj[field] ?? 0
+    } else if (array[i-1].ts.slice(0, 10) === obj.ts.slice(0, 10)) {
+        daySum += obj[field]
+    } else {
+      averages.push(daySum / 24);
+      daySum = obj[field];
+    }
+  })
+  return averages
+}
+
 export {
+    getDayAverages,
     getTotalAmountFromField,
     getValuesFromField,
     getAverageFromField,
