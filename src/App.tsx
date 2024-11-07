@@ -19,7 +19,7 @@ export default function App() {
 
   const [dates, updateDates] = useReducer(
     datesReducer.bind(defaultDate), 
-    {start: defaultDate, end: defaultDate, timespanIndex: 0}
+    {start: defaultDate, end: defaultDate, timespanIndex: 0, isDailyView: true}
   )
 
   const [timestamps, setTimestamps] = useState([{}])
@@ -52,10 +52,10 @@ export default function App() {
             })
           } else {
             setEnergyData({
-              production: getValuesFromField(json, 'prod'),
-              consumption: getValuesFromField(json, 'cons'),
-              withdrawal: getValuesFromField(json, 'fromGrid'),
-              injection: getValuesFromField(json, 'toGrid'),
+              production: getValuesFromField(json, 'prod', dates.isDailyView),
+              consumption: getValuesFromField(json, 'cons', dates.isDailyView),
+              withdrawal: getValuesFromField(json, 'fromGrid', dates.isDailyView),
+              injection: getValuesFromField(json, 'toGrid', dates.isDailyView),
               totalProduction: getValueFromField(json, 'prod'),
               totalConsumption: getValueFromField(json, 'cons'),
               averageProdByDay: getDayAverageFromField(json, 'prod'),

@@ -9,6 +9,8 @@ type TApiData = {
     toGrid: number
 }
 
+type TApiField = 'prod' | 'cons' | 'self' | 'fromGrid' | 'toGrid'
+
 type TDisplayData = {
     title: string,
     value: number|string, 
@@ -19,7 +21,8 @@ type TDisplayData = {
 type TDates = {
     start: DateTime,
     end: DateTime,
-    timespanIndex: number
+    timespanIndex: number,
+    isDailyView: boolean
 }
 
 type TDatesAction = {
@@ -28,6 +31,7 @@ type TDatesAction = {
 
 export type {
     TApiData,
+    TApiField,
     TDisplayData,
     TDates,
     TDatesAction
