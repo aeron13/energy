@@ -13,13 +13,6 @@ type TNum = number | string
 
 type TApiField = 'prod' | 'cons' | 'self' | 'fromGrid' | 'toGrid'
 
-type TDisplayData = {
-    title: string,
-    value: number|string, 
-    unit: string,
-    color: string|undefined
-}
-
 type TDates = {
     start: DateTime,
     end: DateTime,
@@ -35,7 +28,6 @@ export type {
     TNum,
     TApiData,
     TApiField,
-    TDisplayData,
     TDates,
     TDatesAction
 }

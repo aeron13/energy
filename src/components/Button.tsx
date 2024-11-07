@@ -1,6 +1,12 @@
 import React, { MouseEventHandler } from "react";
 
-const Button: React.FC<{onClick: MouseEventHandler, children: React.ReactNode, selected: boolean}> = (props) => {
+interface IButton {
+    onClick: MouseEventHandler, 
+    children: React.ReactNode, 
+    selected: boolean
+}
+
+const Button: React.FC<IButton> = (props) => {
     return (
         <button 
             onClick={props.onClick} 

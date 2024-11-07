@@ -9,6 +9,7 @@ import { datesReducer } from './ts/reducers';
 import { getTotalAmountFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
 import { num } from './ts/formatters';
 
+
 export default function App() {
 
   const URL = import.meta.env.VITE_URL ?? ''
@@ -22,7 +23,7 @@ export default function App() {
     {start: defaultDate, end: defaultDate, timespanIndex: 0, isDailyView: true}
   )
 
-  const [timestamps, setTimestamps] = useState([{}])
+  const [timestamps, setTimestamps] = useState([''])
 
   const [energyData, setEnergyData] = useState({
     production: [0],
