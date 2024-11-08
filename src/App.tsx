@@ -103,13 +103,13 @@ export default function App() {
   }
 
   return (
-    <div className="pt-10 container mx-auto">
+    <div className="py-8 lg:py-10 container mx-auto px-4">
 
-      <div className="flex gap-2 mb-3 border-b border-1 py-3">
-        <Button onClick={selectTodayValues} selected={dates.timespanIndex === 0}>Today</Button>
-        <Button onClick={selectWeeklyValues} selected={dates.timespanIndex === 1}>This week</Button>
-        <Button onClick={selectMonthlyValues} selected={dates.timespanIndex === 2}>This month</Button>
-        <Button onClick={selectLastMonthValues} selected={dates.timespanIndex === 3}>Last month</Button>
+      <div className="flex flex-wrap gap-2 mb-3 border-b border-1 py-3">
+        <Button onClick={selectTodayValues} selected={dates.timespanIndex === 0} disabled={isLoading}>Today</Button>
+        <Button onClick={selectWeeklyValues} selected={dates.timespanIndex === 1} disabled={isLoading}>This week</Button>
+        <Button onClick={selectMonthlyValues} selected={dates.timespanIndex === 2} disabled={isLoading}>This month</Button>
+        <Button onClick={selectLastMonthValues} selected={dates.timespanIndex === 3} disabled={isLoading}>Last month</Button>
       </div>
       <div className="mb-6">
         { dates.start.toISODate() !== dates.end.toISODate() && 
@@ -122,8 +122,8 @@ export default function App() {
       { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
 
         <div>
-          <div className='grid lg:grid-cols-4'>
-            <div className='lg:col-span-3'>
+          <div className='lg:grid lg:grid-cols-4'>
+            <div className='lg:col-span-3 relative'>
               <Chart 
                 data={[
                   {type: 'Production', data: energyData.production},
@@ -134,14 +134,14 @@ export default function App() {
                 loading={isLoading}
               />
             </div>
-            <div className='pl-12'>
+            <div className='lg:pl-12'>
               { (!isLoading && !error.state) &&
-              <div className='mt-6 flex flex-col gap-6'>
+              <div className='mt-12 lg:mt-6 grid grid-cols-2 lg:flex lg:flex-col gap-y-12 gap-x-8 lg:gap-y-6'>
                 <DisplayData title="Production" value={num(energyData.totalProduction)} unit="kWh" color="text-teal" />
                 <DisplayData title="Consumption" value={num(energyData.totalConsumption)} unit="kWh" color="text-orange" />
-                <DisplayData title="Average grid injection by day" value={num(energyData.averageToGridByDay)} unit="kWh" color="" />
-                <DisplayData title="Average rate of grid injection / production" value={num(energyData.averageRate)} unit="%" color="" />
-                <DisplayData title="Average rate of self consumption / production" value={num(energyData.consumptionRate)} unit="%" color="" />
+                <DisplayData title="Average grid injection" value={num(energyData.averageToGridByDay)} unit="kWh" color="" />
+                <DisplayData title="How much of the produced energy you pushed on the grid?" value={num(energyData.averageRate)} unit="%" color="" />
+                <DisplayData title="How much of the consumed energy you produced?" value={num(energyData.consumptionRate)} unit="%" color="" />
               </div>
               }
             </div>

@@ -25,7 +25,9 @@ const Chart: React.FC<{data: any[], timestamps: any[], loading: boolean}> = (pro
                 color: ['#2bb3a0', '#ffab00', '#838e9c', '#3c424a'],
                 grid: {
                     left: 60,
-                    right: 10
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
                 },
                 tooltip: {
                   trigger: 'axis',
@@ -60,7 +62,7 @@ const Chart: React.FC<{data: any[], timestamps: any[], loading: boolean}> = (pro
     }, [props.loading])
 
     return(
-        <div id="chart" className={`w-full h-[600px] ${props.loading && 'hidden'}`}></div>
+        <div id="chart" className={`relative w-full h-[400px] lg:h-[600px] overflow-x-scroll ${props.loading && 'hidden'}`}></div>
     )
 
 }
