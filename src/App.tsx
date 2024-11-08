@@ -1,4 +1,4 @@
-import { useState, useReducer, useEffect } from 'react'
+import { useState, useReducer, useEffect } from 'react';
 import DisplayData from './components/DisplayData';
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
@@ -6,8 +6,9 @@ import Chart from './components/Chart';
 import { DateTime } from "luxon";
 import { fetchDyDate } from "./ts/api"
 import { datesReducer } from './ts/reducers';
-import { getValueFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
+import { getTotalAmountFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
 import { num } from './ts/formatters';
+
 
 export default function App() {
 
@@ -19,10 +20,10 @@ export default function App() {
 
   const [dates, updateDates] = useReducer(
     datesReducer.bind(defaultDate), 
-    {start: defaultDate, end: defaultDate, timespanIndex: 0}
+    {start: defaultDate, end: defaultDate, timespan: 'day', isDailyView: true}
   )
 
-  const [timestamps, setTimestamps] = useState([{}])
+  const [timestamps, setTimestamps] = useState([''])
 
   const [energyData, setEnergyData] = useState({
     production: [0],
@@ -52,19 +53,19 @@ export default function App() {
             })
           } else {
             setEnergyData({
-              production: getValuesFromField(json, 'prod'),
-              consumption: getValuesFromField(json, 'cons'),
-              withdrawal: getValuesFromField(json, 'fromGrid'),
-              injection: getValuesFromField(json, 'toGrid'),
-              totalProduction: getValueFromField(json, 'prod'),
-              totalConsumption: getValueFromField(json, 'cons'),
+              production: getValuesFromField(json, 'prod', dates.isDailyView),
+              consumption: getValuesFromField(json, 'cons', dates.isDailyView),
+              withdrawal: getValuesFromField(json, 'fromGrid', dates.isDailyView),
+              injection: getValuesFromField(json, 'toGrid', dates.isDailyView),
+              totalProduction: getTotalAmountFromField(json, 'prod'),
+              totalConsumption: getTotalAmountFromField(json, 'cons'),
               averageProdByDay: getDayAverageFromField(json, 'prod'),
               averageConsByDay: getDayAverageFromField(json, 'cons'),
               averageToGridByDay: getDayAverageFromField(json, 'toGrid'),
               averageRate: getAverageRateFromFields(json, 'prod', 'toGrid'),
               consumptionRate: getAverageRateFromFields(json, 'cons', 'self')
             })
-            setTimestamps(getTimestamps(json, dates.timespanIndex))
+            setTimestamps(getTimestamps(json, dates.timespan))
           }
         })
         .catch(err => {
@@ -106,10 +107,10 @@ export default function App() {
     <div className="py-8 lg:py-10 container mx-auto px-4">
 
       <div className="flex flex-wrap gap-2 mb-3 border-b border-1 py-3">
-        <Button onClick={selectTodayValues} selected={dates.timespanIndex === 0} disabled={isLoading}>Today</Button>
-        <Button onClick={selectWeeklyValues} selected={dates.timespanIndex === 1} disabled={isLoading}>This week</Button>
-        <Button onClick={selectMonthlyValues} selected={dates.timespanIndex === 2} disabled={isLoading}>This month</Button>
-        <Button onClick={selectLastMonthValues} selected={dates.timespanIndex === 3} disabled={isLoading}>Last month</Button>
+        <Button onClick={selectTodayValues} selected={dates.timespan === 'day'} disabled={isLoading}>Today</Button>
+        <Button onClick={selectWeeklyValues} selected={dates.timespan === 'week'} disabled={isLoading}>This week</Button>
+        <Button onClick={selectMonthlyValues} selected={dates.timespan === 'month'} disabled={isLoading}>This month</Button>
+        <Button onClick={selectLastMonthValues} selected={dates.timespan === 'last-month'} disabled={isLoading}>Last month</Button>
       </div>
       <div className="mb-6">
         { dates.start.toISODate() !== dates.end.toISODate() && 

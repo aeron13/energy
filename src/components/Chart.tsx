@@ -3,7 +3,18 @@ import React from 'react';
 import { useEffect } from 'react';
 import { ECharts } from 'echarts';
 
-const Chart: React.FC<{data: any[], timestamps: any[], loading: boolean}> = (props) => {
+interface IChartData {
+  type: string
+  data: string|number[]
+}
+
+interface IChart {
+  data: IChartData[], 
+  timestamps: string[], 
+  loading: boolean
+}
+
+const Chart: React.FC<IChart> = (props) => {
 
     useEffect(() => {
         let eChart: ECharts|null = null
