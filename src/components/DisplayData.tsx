@@ -1,7 +1,13 @@
 import React from "react";
-import type { TDisplayData } from "../ts/types";
 
-const DisplayData: React.FC<TDisplayData> = (props) => {
+interface IDisplayData {
+    title: string
+    value: number|string
+    unit: string
+    color: string|undefined
+}
+
+const DisplayData: React.FC<IDisplayData> = (props) => {
 
     return (
         <div className="">
