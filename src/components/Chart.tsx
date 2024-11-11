@@ -33,10 +33,10 @@ const Chart: React.FC<IChart> = (props) => {
             })
 
             const option = {
-                color: ['#2bb3a0', '#ffab00', '#838e9c', '#3c424a'],
+                color: ['#2bb3a0', '#ffab00', '#c4c5c6', '#3c424a'],
                 grid: {
                     left: 60,
-                    right: 10,
+                    right: 20,
                     top: 20,
                     bottom: 20,
                 },

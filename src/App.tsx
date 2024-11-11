@@ -3,6 +3,7 @@ import DisplayData from './components/DisplayData';
 import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
 import Chart from './components/Chart';
+import DataGroup from './components/DataGroup';
 import { DateTime } from "luxon";
 import { fetchDyDate } from "./ts/api"
 import { datesReducer } from './ts/reducers';
@@ -32,6 +33,9 @@ export default function App() {
     injection: [0],
     totalProduction: 0,
     totalConsumption: 0,
+    totalSelfConsumption: 0,
+    totalInjection: 0,
+    totalWithdrawal: 0,
     averageProdByDay: 0,
     averageConsByDay: 0,
     averageToGridByDay: 0,
@@ -59,6 +63,9 @@ export default function App() {
               injection: getValuesFromField(json, 'toGrid', dates.isDailyView),
               totalProduction: getTotalAmountFromField(json, 'prod'),
               totalConsumption: getTotalAmountFromField(json, 'cons'),
+              totalSelfConsumption: getTotalAmountFromField(json, 'self'),
+              totalInjection: getTotalAmountFromField(json, 'toGrid'),
+              totalWithdrawal: getTotalAmountFromField(json, 'fromGrid'),
               averageProdByDay: getDayAverageFromField(json, 'prod'),
               averageConsByDay: getDayAverageFromField(json, 'cons'),
               averageToGridByDay: getDayAverageFromField(json, 'toGrid'),
@@ -106,7 +113,7 @@ export default function App() {
   return (
     <div className="py-8 lg:py-10 container mx-auto px-4">
 
-      <div className="flex flex-wrap gap-2 mb-3 border-b border-1 py-3">
+      <div className="flex flex-wrap mb-3 bg-white rounded-md">
         <Button onClick={selectTodayValues} selected={dates.timespan === 'day'} disabled={isLoading}>Today</Button>
         <Button onClick={selectWeeklyValues} selected={dates.timespan === 'week'} disabled={isLoading}>This week</Button>
         <Button onClick={selectMonthlyValues} selected={dates.timespan === 'month'} disabled={isLoading}>This month</Button>
@@ -124,25 +131,39 @@ export default function App() {
 
         <div>
           <div className='lg:grid lg:grid-cols-4'>
-            <div className='lg:col-span-3 relative'>
+            <div className='lg:col-span-2 xl:col-span-3 relative bg-white rounded-lg p-3 pb-5'>
               <Chart 
                 data={[
                   {type: 'Production', data: energyData.production},
                   {type: 'Consumption', data: energyData.consumption},
-                  {type: 'Grid injection', data: energyData.injection}
+                  {type: 'Grid injection', data: energyData.injection},
+                  {type: 'Grid withdrawal', data: energyData.withdrawal}
                 ]} 
                 timestamps={timestamps}
                 loading={isLoading}
               />
             </div>
-            <div className='lg:pl-12'>
+            <div className='lg:col-span-2 xl:col-span-1 lg:pl-6'>
               { (!isLoading && !error.state) &&
-              <div className='mt-12 lg:mt-6 grid grid-cols-2 lg:flex lg:flex-col gap-y-12 gap-x-8 lg:gap-y-6'>
-                <DisplayData title="Production" value={num(energyData.totalProduction)} unit="kWh" color="text-teal" />
-                <DisplayData title="Consumption" value={num(energyData.totalConsumption)} unit="kWh" color="text-orange" />
-                <DisplayData title="Average grid injection" value={num(energyData.averageToGridByDay)} unit="kWh" color="" />
-                <DisplayData title="How much of the produced energy you pushed on the grid?" value={num(energyData.averageRate)} unit="%" color="" />
-                <DisplayData title="How much of the consumed energy you produced?" value={num(energyData.consumptionRate)} unit="%" color="" />
+              <div className='bg-white p-6 rounded-lg mt-12 lg:mt-0 lg:flex lg:flex-col'>
+                <DataGroup title="Production">
+                  <DisplayData title="" value={num(energyData.totalProduction)} unit="kWh" color="text-teal" size='' />
+                </DataGroup>
+                <DataGroup title="Consumption">
+                  <DisplayData title="" value={num(energyData.totalConsumption)} unit="kWh" color="text-orange" size='' />
+                  <DisplayData title="Self consumption" value={num(energyData.totalSelfConsumption)} unit="kWh" color="" size='sm' />
+                </DataGroup>
+                <DataGroup title="Grid">
+                  <DisplayData title="Grid injection" value={num(energyData.totalInjection)} unit="kWh" color="" size='sm' />
+                  <DisplayData title="Grid withdrawal" value={num(energyData.totalWithdrawal)} unit="kWh" color="" size='sm' />
+                  <DisplayData title="Average grid injection" value={num(energyData.averageToGridByDay)} unit="kWh" color="" size='sm' />
+                </DataGroup>
+                <DataGroup title="">
+                  <DisplayData title="How much of the produced energy you pushed on the grid?" value={num(energyData.averageRate)} unit="%" color="" size='' />
+                </DataGroup>
+                <DataGroup title="">
+                  <DisplayData title="How much of the consumed energy you produced?" value={num(energyData.consumptionRate)} unit="%" color="" size='' />
+                </DataGroup>
               </div>
               }
             </div>
