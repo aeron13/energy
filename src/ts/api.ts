@@ -1,6 +1,10 @@
 import { DateTime } from "luxon";
 import type { TApiData } from "./types";
 
+/**
+ * Mocks the behavior of a real API call, by fetching the json available and the given endpoint
+ * and then filtering the data according to given start and end dates.
+ */
 const fetchDyDate = async (url: string, startDate: DateTime, endDate: DateTime) => {
     let data: any[] = []
     await fetch(url)
