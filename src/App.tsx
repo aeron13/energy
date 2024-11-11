@@ -1,14 +1,15 @@
 import { useState, useReducer, useEffect } from 'react';
-import DisplayData from './components/DisplayData';
-import ErrorMessage from "./components/ErrorMessage";
-import Button from "./components/Button";
-import Chart from './components/Chart';
-import DataGroup from './components/DataGroup';
 import { DateTime } from "luxon";
 import { fetchDyDate } from "./ts/api"
 import { datesReducer } from './ts/reducers';
 import { getTotalAmountFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
 import { num } from './ts/formatters';
+
+import DisplayData from './components/DisplayData';
+import ErrorMessage from "./components/ErrorMessage";
+import Button from "./components/Button";
+import Chart from './components/Chart';
+import DataGroup from './components/DataGroup';
 
 
 export default function App() {
