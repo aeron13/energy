@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { fetchDyDate } from "./ts/api"
 import { datesReducer } from './ts/reducers';
 import { getTotalAmountFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
-import { num } from './ts/formatters';
+import { num, dt } from './ts/formatters';
 
 import DisplayData from './components/DisplayData';
 import ErrorMessage from "./components/ErrorMessage";
@@ -122,9 +122,9 @@ export default function App() {
       </div>
       <div className="mb-6">
         { dates.start.toISODate() !== dates.end.toISODate() && 
-          <p>From {dates.start.toFormat('MMMM dd, y')} to {dates.end.toFormat('MMMM dd, y')}</p>
+          <p className=''>From <strong>{dt(dates.start)}</strong> to <strong>{dt(dates.end)}</strong></p>
         }
-        { dates.start.toISODate() === dates.end.toISODate() && <p>{dates.start.toFormat('MMMM dd, y')}</p>}
+        { dates.start.toISODate() === dates.end.toISODate() && <p><b>{dt(dates.start)}</b></p>}
       </div>
 
       { isLoading && <div>Loading...</div> }
