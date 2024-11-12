@@ -130,6 +130,7 @@ export default function App() {
       { isLoading && <div>Loading...</div> }
       { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
 
+      { (!isLoading && !error.state) &&
         <div>
           <div className='lg:grid lg:grid-cols-4'>
             <div className='lg:col-span-2 xl:col-span-3 relative bg-white rounded-lg p-3 pb-5'>
@@ -145,7 +146,6 @@ export default function App() {
               />
             </div>
             <div className='lg:col-span-2 xl:col-span-1 lg:pl-6'>
-              { (!isLoading && !error.state) &&
               <div className='bg-white p-6 rounded-lg mt-12 lg:mt-0 lg:flex lg:flex-col'>
                 <DataGroup title="Production">
                   <DisplayData title="" value={num(energyData.totalProduction)} unit="kWh" color="text-teal" size='' />
@@ -155,6 +155,7 @@ export default function App() {
                   <DisplayData title="Self consumption" value={num(energyData.totalSelfConsumption)} unit="kWh" color="" size='sm' />
                 </DataGroup>
                 <DataGroup title="Grid">
+                  <div className='lg:col-span-2'></div>
                   <DisplayData title="Grid injection" value={num(energyData.totalInjection)} unit="kWh" color="" size='sm' />
                   <DisplayData title="Grid withdrawal" value={num(energyData.totalWithdrawal)} unit="kWh" color="" size='sm' />
                   <DisplayData title="Average grid injection" value={num(energyData.averageToGridByDay)} unit="kWh" color="" size='sm' />
@@ -166,10 +167,10 @@ export default function App() {
                   <DisplayData title="How much of the consumed energy you produced?" value={num(energyData.consumptionRate)} unit="%" color="" size='' />
                 </DataGroup>
               </div>
-              }
             </div>
           </div>
-        </div>    
+        </div> 
+      }
     </div>
   );
 }
