@@ -41,6 +41,37 @@ const getValuesFromField = (array: TApiData[], field: TApiField, dailyView = fal
   return dailyValuesFromField(array, field).map(val => Math.floor(val))
 }
 
+type TChartData = {
+  type: string
+  data: number[]
+}
+
+
+const getHourValuesFromField = (array: TApiData[], field: TApiField): any[] => {
+
+  if (array.length === 0) return []
+
+  const hourValues: TChartData[] = [{
+      type: array[0].ts.slice(0, 10), 
+      data: [array[0][field]]
+    }];
+
+  for (let i = 1; i < array.length; i++) {
+    const obj = array[i];
+    if (array[i-1].ts.slice(0, 10) === obj.ts.slice(0, 10)) {
+      hourValues.at(-1)?.data.push(obj[field])
+    } else {
+      hourValues.push({
+        type: obj.ts.slice(0, 10), 
+        data: [obj[field]]
+      })
+    }
+  }
+
+  return hourValues;
+
+}
+
 /**
  * Generates an array of date or time values for the chart
  */
@@ -48,7 +79,12 @@ const getTimestamps = (array: TApiData[], type: string): string[] => {
   switch(type) {
     case 'day': {
       // daily view
-      return array.map(obj => obj.ts.slice(11, 16))
+      // return array.map(obj => obj.ts.slice(11, 16))
+      const dates: string[] = [];
+      for(let i = 0; i < 24; i++) {
+        dates.push(`${i}:00`)
+      }
+      return dates
     }
     case 'week': {
       // weekly view
@@ -186,5 +222,6 @@ export {
     getAverageFromField,
     getDayAverageFromField,
     getAverageRateFromFields,
-    getTimestamps
+    getTimestamps,
+    getHourValuesFromField
 }

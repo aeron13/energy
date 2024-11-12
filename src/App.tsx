@@ -2,7 +2,7 @@ import { useState, useReducer, useEffect } from 'react';
 import { DateTime } from "luxon";
 import { fetchDyDate } from "./ts/api"
 import { datesReducer } from './ts/reducers';
-import { getTotalAmountFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps } from './ts/getters'; 
+import { getTotalAmountFromField, getValuesFromField, getDayAverageFromField, getAverageRateFromFields, getTimestamps, getHourValuesFromField } from './ts/getters'; 
 import { num } from './ts/formatters';
 
 import DisplayData from './components/DisplayData';
@@ -26,6 +26,8 @@ export default function App() {
   )
 
   const [timestamps, setTimestamps] = useState([''])
+
+  const [hourdata, setHourdata] = useState([{type: '', data: []}])
 
   const [energyData, setEnergyData] = useState({
     production: [0],
@@ -73,7 +75,8 @@ export default function App() {
               averageRate: getAverageRateFromFields(json, 'prod', 'toGrid'),
               consumptionRate: getAverageRateFromFields(json, 'cons', 'self')
             })
-            setTimestamps(getTimestamps(json, dates.timespan))
+            setTimestamps(getTimestamps(json, 'day'))
+            setHourdata(getHourValuesFromField(json, 'cons'))
           }
         })
         .catch(err => {
@@ -133,7 +136,7 @@ export default function App() {
         <div>
           <div className='lg:grid lg:grid-cols-4'>
             <div className='lg:col-span-2 xl:col-span-3 relative bg-white rounded-lg p-3 pb-5'>
-              <Chart 
+              {/* <Chart 
                 data={[
                   {type: 'Production', data: energyData.production},
                   {type: 'Consumption', data: energyData.consumption},
@@ -142,6 +145,11 @@ export default function App() {
                 ]} 
                 timestamps={timestamps}
                 loading={isLoading}
+              /> */}
+              <Chart 
+              data={hourdata}
+              timestamps={timestamps}
+              loading={isLoading}
               />
             </div>
             <div className='lg:col-span-2 xl:col-span-1 lg:pl-6'>
