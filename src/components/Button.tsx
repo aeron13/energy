@@ -11,7 +11,7 @@ const Button: React.FC<IButton> = (props) => {
     return (
         <button 
             onClick={props.onClick} 
-            className={`${props.selected ? 'bg-teal text-white' : ''} ${props.disabled && 'opacity-50 pointer-events-none'} px-5 py-1 lg:py-2 rounded-lg`}
+            className={`${props.selected ? 'bg-teal text-white' : ''} ${props.disabled && 'opacity-50 pointer-events-none'} text-sm md:text-base leading-tight px-5 py-2 rounded-lg`}
         >
             {props.children}
         </button>

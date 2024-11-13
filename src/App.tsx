@@ -114,13 +114,13 @@ export default function App() {
   return (
     <div className="py-8 lg:py-10 container mx-auto px-4">
 
-      <div className="flex flex-wrap mb-3 bg-white rounded-md">
+      <div className="flex mb-3 bg-white rounded-md">
         <Button onClick={selectTodayValues} selected={dates.timespan === 'day'} disabled={isLoading}>Today</Button>
         <Button onClick={selectWeeklyValues} selected={dates.timespan === 'week'} disabled={isLoading}>This week</Button>
         <Button onClick={selectMonthlyValues} selected={dates.timespan === 'month'} disabled={isLoading}>This month</Button>
         <Button onClick={selectLastMonthValues} selected={dates.timespan === 'last-month'} disabled={isLoading}>Last month</Button>
       </div>
-      <div className="mb-6">
+      <div className="mb-6 text-sm md:text-base">
         { dates.start.toISODate() !== dates.end.toISODate() && 
           <p className=''>From <strong>{dt(dates.start)}</strong> to <strong>{dt(dates.end)}</strong></p>
         }
