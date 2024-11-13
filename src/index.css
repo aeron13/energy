@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-color: #ececec;
+}
+
+.data-group:not(:first-child) {
+    padding-top: 20px;
+}
+
+.data-group:not(:last-child) {
+    border-bottom-width: 1px;
+    padding-bottom: 20px;
+}

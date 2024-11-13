@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# Energy
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A dashboard displaying data about production and consumption of electric energy.
+Coded with **React.js** + **TypeScript**, with **Tailwind.css** and **Vite.js** as bundler.
+Charts made with [Echarts](https://echarts.apache.org/).
 
-## Available Scripts
+### Installation & How to run
 
-In the project directory, you can run:
+With Node and npm installed:
+- Run ```npm install``` to install dependencies
+- Run ```cp .env.example .env``` to create a local .env file
+- Add the URL variable in the .env file
+- Run ```npm run dev``` to start the developer server.
 
-### `npm start`
+You will see an error, because we are trying to fetch from localhost an endpoint that doesn't allow cross-domain requests.
+As a workaround for this issue, I installed a [Chrome extension](https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) that adds a ```Access-Control-Allow-Origin: *``` rule to the request header, thus allowing cross-domain requests.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Folders & files
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+##### /config
 
-### `npm test`
+TypeScript configuration files.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+##### /public
+Folder storing public assets.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### /src
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+##### /components
+- Button.tsx
+- Chart.tsx
+- DataGroup.tsx
+- DisplayData.tsx
+- ErrorMessage.tsx
 
-### `npm run eject`
+##### /ts
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **api.ts**
+Contains a function to fetch data from a fictive API. The endpoint that's currently requested exposes a static JSON file, that is filtered according to given dates.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **formatters.ts**
+Contains helper functions for formatting dates and energy values.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **getters.ts**
+Functions that transform, filter and format the data coming from the API according to different needs. 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **reducers.ts**
+Contains a reducer function that handles the update of the 'dates' reducer.
 
-## Learn More
+- **types.ts**
+Exposes TypeScript types reused throughout the application.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+##### App.tsx
+The application main file, where the state is managed.
+There are mainly 3 types of state:
+- **content** (energyData): the energy data that are fetched from the API and displayed through Chart and DisplayData components.
+- **dates**: represents the timespan chosen by the user for visualizing data. It is set by clicking on the Button components. Implemented with useReducer instead of useState, because the reducer is a better fit for implementing a 'switch' pattern.
+- **application state** (loading and error): it is linked to the fetching process and handles API errors and edge cases.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+##### index.css
+Imports Tailwind classes for the whole application.
 
-### Code Splitting
+##### main.tsx
+Launches the React application.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
