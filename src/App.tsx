@@ -10,6 +10,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import Button from "./components/Button";
 import Chart from './components/Chart';
 import DataGroup from './components/DataGroup';
+import LoadingMessage from './components/LoadingMessage';
 
 
 export default function App() {
@@ -127,7 +128,7 @@ export default function App() {
         { dates.start.toISODate() === dates.end.toISODate() && <p><b>{dt(dates.start)}</b></p>}
       </div>
 
-      { isLoading && <div>Loading...</div> }
+      { isLoading && <LoadingMessage /> }
       { (!isLoading && error.state) && <ErrorMessage message={error.message} /> }
 
       { (!isLoading && !error.state) &&
