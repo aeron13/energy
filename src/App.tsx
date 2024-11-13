@@ -15,9 +15,11 @@ import LoadingMessage from './components/LoadingMessage';
 
 export default function App() {
 
+  // set default values
   const URL = import.meta.env.VITE_URL ?? ''
   const defaultDate = DateTime.fromISO('2024-10-12')
 
+  // initialise state
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState({state: false, message: ''})
 
@@ -45,6 +47,7 @@ export default function App() {
     consumptionRate: 0
   })
 
+  // query for energy data
   useEffect(() => {
     if(!isLoading) {
       setIsLoading(true)
@@ -52,11 +55,13 @@ export default function App() {
         fetchDyDate(URL, dates.start, dates.end)
         .then(json => {
           setIsLoading(false)
+          // handle case where no data is available
           if (json.length === 0) {
             setError({
               state: true,
               message: 'Data not available for selected timespan. Try with a different one'
             })
+          // updates energy data and chart timestamps
           } else {
             setEnergyData({
               production: getValuesFromField(json, 'prod', dates.isDailyView),
@@ -77,6 +82,7 @@ export default function App() {
             setTimestamps(getTimestamps(json, dates.timespan))
           }
         })
+        // display the error
         .catch(err => {
           console.log(err)
           setIsLoading(false)
@@ -87,6 +93,7 @@ export default function App() {
         })
       }, 1000)
     }
+    // useEffect cleanup function
     return () => { 
       setIsLoading(false)
       setError({
@@ -162,7 +169,7 @@ export default function App() {
                   <DisplayData title="Average grid injection" value={num(energyData.averageToGridByDay)} unit="kWh" color="" size='sm' />
                 </DataGroup>
                 <DataGroup title="">
-                  <DisplayData title="How much of the produced energy you pushed on the grid?" value={num(energyData.averageRate)} unit="%" color="" size='' />
+                  <DisplayData title="How much of the produced energy you pushed to the grid?" value={num(energyData.averageRate)} unit="%" color="" size='' />
                 </DataGroup>
                 <DataGroup title="">
                   <DisplayData title="How much of the consumed energy you produced?" value={num(energyData.consumptionRate)} unit="%" color="" size='' />
