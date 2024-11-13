@@ -36,7 +36,7 @@ const dailyValuesFromField = (array: TApiData[], field: TApiField): number[] => 
  */
 const getValuesFromField = (array: TApiData[], field: TApiField, dailyView = false): any[] => {
   if (dailyView) {
-    return array.map(obj => obj[field]?.toFixed(2))
+    return array.map(obj => obj[field]?.toFixed(0))
   }
   return dailyValuesFromField(array, field).map(val => Math.floor(val))
 }

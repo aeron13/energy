@@ -23,20 +23,47 @@ const Chart: React.FC<IChart> = (props) => {
             const chartDom = document.getElementById('chart')!;
             eChart = echarts.init(chartDom);
 
+
             const series = props.data.map(obj => {
-                return {
-                    name: obj.type,
-                    type: 'line',
-                    smooth: false,
-                    data: obj.data,
+
+              let color = '';
+              let opacity = 0.6;
+              switch(obj.type) {
+                case 'Consumption':
+                  color = `255, 171, 0`
+                break
+                case 'Production':
+                  color = `43, 179, 160`
+                break
+                default:
+                  color = '170, 180, 200'
+                break
+              };
+
+              return {
+                name: obj.type,
+                type: 'line',
+                data: obj.data,
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 6,
+                itemStyle: {
+                  color: `rgba(${color}, ${opacity})`
+                },
+                areaStyle: {
+                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                    { offset: 0, color: `rgba(${color}, ${opacity})`},
+                    { offset: 1, color: `rgba(${color}, 0.05)` }
+                  ])
                 }
-            })
+              }
+            });
 
             const option = {
                 color: ['#2bb3a0', '#ffab00', '#c4c5c6', '#3c424a'],
                 grid: {
                     left: 60,
-                    right: 20,
+                    right: 10,
                     top: 20,
                     bottom: 20,
                 },
